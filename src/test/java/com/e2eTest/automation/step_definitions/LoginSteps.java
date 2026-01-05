@@ -1,30 +1,49 @@
 package com.e2eTest.automation.step_definitions;
 
+import org.junit.jupiter.api.Assertions;
+
+import com.e2eTest.automation.page_objects.LoginPage;
+import com.e2eTest.automation.utils.ConfigFileReader;
+import com.e2eTest.automation.utils.Setup;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class LoginSteps {
-	
-	@Given("je me connecte sur le site web Demo Shop {string}")
-	public void jeMeConnecteSurLeSiteWebDemoShop(String string) {
+
+	LoginPage loginPage = new LoginPage();
+	ConfigFileReader configFileReader = new ConfigFileReader();
+
+	@Given("Je me connecte sur le site Web Demo Shop")
+	public void jeMeConnecteSurLeSiteWebDemoShop() {
+		Setup.getDriver().get(configFileReader.getProperty("home.url"));
 	}
-	@When("je clique sur le bouton Log in")
+
+	@When("Je clique sur le bouton Log in")
 	public void jeCliqueSurLeBoutonLogIn() {
+		LoginPage.getLoginBarMenu().click();
 	}
-	@When("je saisi une adresse mail\"ziedhannachi0@gmail.com\"")
-	public void jeSaisiUneAdresseMailZiedhannachi0GmailCom() {
+
+	@When("Je saisis une adresse mail")
+	public void jeSaisisUneAdresseMail() {
+		LoginPage.getEmailField().sendKeys(configFileReader.getProperty("home.email"));
 	}
-	@When("je saisi un mot de passe")
-	public void jeSaisiUnMotDePasse() {
+
+	@When("Je saisis un mot de passe")
+	public void jeSaisisUnMotDePasse() {
+		LoginPage.getPasswordField().sendKeys(configFileReader.getProperty("home.password"));
 	}
-	@When("je clique sur le bouton Login")
+
+	@When("Je clique sur le bouton Login")
 	public void jeCliqueSurLeBoutonLogin() {
-	}
-	@Then("je me dirige vers la page home")
-	public void jeMeDirigeVersLaPageHome() {
+		LoginPage.getLoginButton().click();
 	}
 
+	@Then("Je me redirige vers la page home {string}")
+	public void jeMeRedirigeVersLaPageHome(String email) {
+		String homePage = LoginPage.getHomePage().getText();
+		Assertions.assertEquals(homePage, email);
 
-
+	}
 }
